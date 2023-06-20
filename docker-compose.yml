@@ -9,37 +9,32 @@ services:
       - POSTGRES_USER=fiap
       - POSTGRES_PASSWORD=fiap
     volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - burgerstore_network
+      - project-network
+
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: web
-    environment:
-      - POSTGRES_DB=challengedb
-      - POSTGRES_USER=fiap
-      - POSTGRES_PASSWORD=fiap
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
+    build: .
+    container_name: app
+    volumes:
+      - .:/usr/src/app
+      - ./logs:/usr/src/app/logs
     ports:
       - "8000:8000"
-    restart: always
-    networks:
-      - burgerstore_network
-    volumes:
-      - .:/app
     depends_on:
       - db
+    networks:
+      - project-network
+    restart: always
+    command: bash -c "sleep 10 && python manage.py makemigrations && python manage.py migrate && python cmd_create_superuser.py && python manage.py runserver 0.0.0.0:8000" 
 
 volumes:
-  postgres_data:
- # web_data:
+  data:
 
 networks:
-  burgerstore_network:
+  project-network:
     driver: bridge
+    ipam:
+      driver: default

@@ -1,1 +1,1 @@
-CREATE DATABASE challengedb WITH OWNER = postgres;
+CREATE DATABASE challengedb WITH OWNER = fiap;

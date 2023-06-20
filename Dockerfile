@@ -1,5 +1,5 @@
 # Use an official Python runtime as the base image
-FROM python:3.8
+FROM python:3.7.15-slim-buster
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -26,10 +26,10 @@ COPY . .
 EXPOSE 8000
 
 # Run migrations
-RUN python manage.py makemigrations
-RUN python manage.py migrate
+#RUN python manage.py makemigrations
+#RUN python manage.py migrate
 
 # Run the create_superuser.py script to create the superuser
-RUN python cmd_create_superuser.py
+#RUN python cmd_create_superuser.py
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
