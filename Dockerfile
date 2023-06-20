@@ -1,18 +1,35 @@
 # Use an official Python runtime as the base image
-FROM python:3.8
+FROM python:3.7.15-slim-buster
 
-# Set the working directory in the container
-WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# set work directory
+WORKDIR /usr/src/app
 
-# Copy the rest of the application code
+#create log files
+RUN mkdir /usr/src/app/logs
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		postgresql-client \
+	&& rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt ./
+
+# install dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
 COPY . .
 
-# Expose the port your Django app will run on
 EXPOSE 8000
 
-# Define the command to run your Django app
+# Run migrations
+#RUN python manage.py makemigrations
+#RUN python manage.py migrate
+
+# Run the create_superuser.py script to create the superuser
+#RUN python cmd_create_superuser.py
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

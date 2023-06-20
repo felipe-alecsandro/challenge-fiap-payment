@@ -1,32 +1,14 @@
-from django.contrib.auth.models import AbstractUser, User, Group, Permission
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import User as UserMain
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+class BaseUser(AbstractUser):
 
-class User(AbstractUser):
-    name = models.CharField(max_length=200, blank=True)
-    email = models.EmailField(_('endereço de email'), blank=True, unique=True)
-    password = models.CharField(max_length=128, blank=True)
-    #required_fields = []
+    email = models.EmailField(_('endereço de e-mail'), blank=True, unique=True)
+    ppassword_confirmation = models.CharField(max_length=100, default='')
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
-    class Meta(AbstractUser.Meta):
-        swappable = 'AUTH_USER_MODEL'
 
-    groups = models.ManyToManyField(
-        Group,
-        verbose_name=_('groups'),
-        blank=True,
-        help_text=_(
-            'The groups this user belongs to. A user will get all permissions '
-            'granted to each of their groups.'
-        ),
-        related_name='custom_user_set'  # Add a unique related_name
-    )
-
-    user_permissions = models.ManyToManyField(
-        Permission,
-        verbose_name=_('user permissions'),
-        blank=True,
-        help_text=_('Specific permissions for this user.'),
-        related_name='custom_user_set'  # Add a unique related_name
-    )
+BaseUser._meta.get_field('username')._unique = False
