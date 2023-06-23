@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-gqwcu42q9&7e#t!$$vfv7*2kc=vx3jiae6fi36itb-5lx10)+h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -37,10 +37,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'user_auth',
     'order',
     'payment',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'EXCEPTION_HANDLER': 'burgerstore.custom_exception_handler',
+    #'DEFAULT_AUTHENTICATION_CLASSES': [
+        #'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+    #],
+    #'DEFAULT_FILTER_BACKENDS': (
+    #    'django_filters.rest_framework.DjangoFilterBackend',
+    #),
+    #'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    #'DEFAULT_PAGINATION_CLASS': None,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
