@@ -52,16 +52,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'EXCEPTION_HANDLER': 'burgerstore.custom_exception_handler',
-    #'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-    #],
-    #'DEFAULT_FILTER_BACKENDS': (
-    #    'django_filters.rest_framework.DjangoFilterBackend',
-    #),
-    #'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    #'DEFAULT_PAGINATION_CLASS': None,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 MIDDLEWARE = [
@@ -114,6 +107,10 @@ DATABASES = {
 
 
 AUTH_USER_MODEL = 'user_auth.BaseUser'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 
 # Password validation
@@ -132,11 +129,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-]
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    # Add any additional authentication backends if needed
 ]
 
 # Internationalization
