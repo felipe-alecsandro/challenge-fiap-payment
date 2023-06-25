@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
-from user_auth.views import UserViewSet, signin
+from user_auth.views import UserViewSet, signin, create_session_token
 from order.views import ProductiewSet, OrderViewSet, OrderItemsViewSet
 
 
@@ -34,5 +34,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('signin/', signin, name='signin'),
+    path('create-session-token/', create_session_token, name='create-session-token'),
+
 ]
 

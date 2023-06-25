@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from user_auth.mixed_views import MixedPermissionModelViewSet
 from rest_framework.response import Response
@@ -30,7 +31,15 @@ class ProductiewSet(MixedPermissionModelViewSet):
 class OrderViewSet(MixedPermissionModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = (AllowAny,)
+    authentication_classes = [JWTAuthentication]
+    permission_classes_by_action = {
+        'create': [AllowAny],
+        'retrieve': [AllowAny],
+        'list': [IsAuthenticated],
+        'update': [AllowAny],
+        'partial_update': [AllowAny],
+        'delete': [AllowAny],
+    }
 
     serializer_action_classes = {
         'create': OrderSerializer,
@@ -55,7 +64,7 @@ class OrderViewSet(MixedPermissionModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
-        user_profile = BaseUser.objects.get(id=user)
+        user_profile = BaseUser.objects.get(id=user.id)
         queryset = super().get_queryset().filter(user=user)
         serializer = OrderInlineItemsSerializer(queryset, many=True)
         return Response(serializer.data)
