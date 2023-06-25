@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from user_auth.mixed_views import MixedPermissionModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from user_auth.models import BaseUser
 from order.models.products import Product
 from order.models.orders import OrderItems, Order
 from order.serializers.products import *
@@ -35,8 +36,8 @@ class OrderViewSet(MixedPermissionModelViewSet):
         'create': OrderSerializer,
         'create_item': OrderItemsSerializer,
         'list': OrderInlineItemsSerializer,
-        'retrieve': OrderInlineItemsSerializer
-
+        'retrieve': OrderInlineItemsSerializer,
+        'update': OrderSerializer,
     }
 
     def create(self, serializer):
@@ -54,12 +55,9 @@ class OrderViewSet(MixedPermissionModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
-        patient = Patient.objects.filter(user=user).order_by("created_at").first()
-        user_type = request.auth.get('user_type')
-        if user_type != 'Patient':
-            return Response({'error': 'Only patients can view their carts.'}, status=403)
-        queryset = super().get_queryset().filter(patient=patient)
-        serializer = CartGetSimpleSerializer(queryset, many=True)
+        user_profile = BaseUser.objects.get(id=user)
+        queryset = super().get_queryset().filter(user=user)
+        serializer = OrderInlineItemsSerializer(queryset, many=True)
         return Response(serializer.data)
     
 
@@ -95,6 +93,7 @@ class OrderItemsViewSet(MixedPermissionModelViewSet):
         'create_item': OrderItemsSerializer,
         'list': OrderInlineItemsSerializer,
         'retrieve': OrderItemsSerializer,
+        'update': OrderItemsSerializer,
 
     }
 
@@ -112,3 +111,15 @@ class OrderItemsViewSet(MixedPermissionModelViewSet):
         order_item = self.get_object()  # Get the order item object
         order_item.delete()  # Delete the order item
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        order = get_object_or_404(Order, pk=pk)
+        serializer = self.get_serializer(order)
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
