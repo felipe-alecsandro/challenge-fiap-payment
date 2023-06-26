@@ -8,6 +8,7 @@ from .products import Product
 class Order(models.Model):
     user = models.ForeignKey(BaseUser, verbose_name='usuario', null=True, blank=True,
                              on_delete=models.CASCADE)
+    session_token = models.CharField(max_length=255, blank=True, null=True)
     cpf = models.CharField(max_length=11,verbose_name="cpf", null=True, blank=True,)
     status = models.CharField(max_length=10,verbose_name="status", choices=(("em aberto", "em aberto"), ("fila", "fila"), ('fazendo','fazendo'), ('disponivel','disponivel'), ('entregue','entregue'), ('cancelado','cancelado')), default='em aberto')
     created_at = models.DateField(auto_now=True, verbose_name="criado em")

@@ -26,11 +26,7 @@ class OrderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Order
-        fields = [
-            'token',
-            'cpf',
-            'status'
-        ]      
+        fields = '__all__'       
 
 class OrderInlineItemsSerializer(serializers.ModelSerializer):
     item = serializers.SerializerMethodField()  # Use SerializerMethodField for custom serialization
@@ -40,6 +36,7 @@ class OrderInlineItemsSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
+            'session_token',
             'cpf',
             'status',
             'created_at',

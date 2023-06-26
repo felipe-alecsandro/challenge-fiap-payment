@@ -38,22 +38,6 @@ def signin(request):
             }, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-#for session without login
-@api_view(['POST'])
-@authentication_classes([])
-@permission_classes([])
-def create_session_token(request):
-    # Generate a new refresh token
-    refresh = RefreshToken()
-
-    # Add custom claims if needed
-    # refresh['custom_key'] = 'custom_value'
-
-    # Obtain the session token from the refresh token
-    session_token = refresh.access_token
-
-    return Response({'session_token': str(session_token)})
-
 class UserViewSet(MixedPermissionModelViewSet):
     queryset = BaseUser.objects.using('default').all()
     serializer_class = UserSerializer
