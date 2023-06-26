@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from django.contrib.auth.hashers import make_password
+
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         if not email:
@@ -9,8 +11,8 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         username = email  # Set username as the provided email
         extra_fields.setdefault('username', username)
+        extra_fields['password'] = make_password(password)  # Tokenize the password
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
         user.save(using=self._db)
         return user
 

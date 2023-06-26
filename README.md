@@ -22,8 +22,8 @@ To build and run the project locally, follow these steps:
 2. In your terminal, run the following command:
     ~sudo docker-compose up -d --build
 
-3. Enter the web image and run migrate
-    ~sudo docker exec -it web /bin/bash
-    ~python manage.py migrate
+3. Enter the web image and run create superuser
+    sudo docker exec -it web /bin/bash
+    python manage.py createsuperuser
 
 

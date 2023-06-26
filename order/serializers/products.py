@@ -36,6 +36,7 @@ class OrderInlineItemsSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
+            'session_token',
             'cpf',
             'status',
             'created_at',
