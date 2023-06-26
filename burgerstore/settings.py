@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -203,3 +205,25 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     "integration-token"
 ]
+
+
+# Set the session engine (default is 'django.contrib.sessions.backends.db')
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Set the session cookie name (default is 'sessionid')
+SESSION_COOKIE_NAME = 'burgerstore_cookie'
+
+# Set the session cookie age (default is 2 weeks)
+SESSION_COOKIE_AGE = 3600  # 1 hour
+
+# Set the session cookie path (default is '/')
+SESSION_COOKIE_PATH = '/burgerstore/'
+
+# Set the session cookie domain (default is None)
+SESSION_COOKIE_DOMAIN = 'burgerstore.com'
+
+# Set whether the session cookie should be secure (default is False)
+SESSION_COOKIE_SECURE = True
+
+# Set whether the session cookie should be HTTP-only (default is True)
+SESSION_COOKIE_HTTPONLY = True
