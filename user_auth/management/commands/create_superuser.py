@@ -8,7 +8,6 @@ from django.core.management.base import BaseCommand
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "burgerstore.settings")
 django.setup()
 
-
 User = get_user_model()
 
 class Command(BaseCommand):
@@ -16,10 +15,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         logger = logging.getLogger(__name__)
-        if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser('admin', 'admin@burgerstore.com', 'password')
-            logger.info('Superuser created successfully')  
+        if not User.objects.filter(email='admin@burgerstore.com').exists():
+            User.objects.create_superuser('admin@burgerstore.com', 'admin')
+            logger.info('Superuser created successfully')
             self.stdout.write(self.style.SUCCESS('Superuser created successfully'))
         else:
-            logger.warning('Superuser already exists')  
+            logger.warning('Superuser already exists')
             self.stdout.write(self.style.NOTICE('Superuser already exists'))

@@ -7,6 +7,10 @@ class Command(BaseCommand):
     help = 'Populate products from a CSV file'
 
     def handle(self, *args, **options):
+        if Product.objects.exists():
+            self.stdout.write(self.style.NOTICE('Products already exist. Skipping population.'))
+            return
+        
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         csv_file = os.path.join(base_dir, 'commands','products.csv')
 
