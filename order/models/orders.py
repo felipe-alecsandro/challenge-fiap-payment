@@ -11,8 +11,8 @@ class Order(models.Model):
     session_token = models.CharField(max_length=255, blank=True, null=True)
     cpf = models.CharField(max_length=11,verbose_name="cpf", null=True, blank=True,)
     status = models.CharField(max_length=10,verbose_name="status", choices=(("em aberto", "em aberto"), ("fila", "fila"), ('fazendo','fazendo'), ('disponivel','disponivel'), ('entregue','entregue'), ('cancelado','cancelado')), default='em aberto')
-    created_at = models.DateField(auto_now=True, verbose_name="criado em")
-    updated_at = models.DateField(auto_now=True, verbose_name="atualizado em", null=True, blank=True,)
+    created_at = models.DateTimeField(auto_now=True, verbose_name="criado em")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="atualizado em", null=True, blank=True,)
 
     class Meta:
         verbose_name = 'Pedido'

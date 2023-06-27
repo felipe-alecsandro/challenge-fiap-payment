@@ -4,7 +4,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from user_auth.mixed_views import MixedPermissionModelViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import status
+from django.db.models import Case, When, IntegerField
+from django.db import models
+from django.db.models import F, Case, When
 from django.contrib.sessions.backends.db import SessionStore
 from user_auth.models import BaseUser
 from order.models.products import Product
@@ -63,12 +67,46 @@ class OrderViewSet(MixedPermissionModelViewSet):
 
         cart_serializer = OrderInlineItemsSerializer(instance)
         return Response(cart_serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=['post'], url_path='checkout')
+    def checkout(self, request, pk=None):
+        order = self.get_object()
+
+        if order.status == 'em aberto':
+            order.status = 'fila'
+            order.save()
+            return Response({'message': 'Order status updated to "fila".'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Esse pedido não pode ser finalizado.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def list(self, request, *args, **kwargs):
+        status = request.query_params.get('status', None)
         user = request.user
-        queryset = self.queryset.filter(user=user) if user.is_authenticated else self.queryset.filter(session_token=request.query_params.get('session'))
+        queryset = self.queryset
+
+        if user.is_authenticated:
+            if not user.is_staff:
+                queryset = queryset.filter(user=user)
+        else:
+            queryset = self.queryset.filter(session_token=request.query_params.get('session'))
+        
+        if status:
+            queryset = queryset.filter(status=status)
+
+        queryset = queryset.order_by(
+            Case(
+                When(status='fila', then=0),
+                When(status='aberto', then=1),
+                default=2,
+                output_field=IntegerField(),
+            ),
+            'updated_at'
+        )
+        
         serializer = OrderInlineItemsSerializer(queryset, many=True)
         return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         user = request.user
