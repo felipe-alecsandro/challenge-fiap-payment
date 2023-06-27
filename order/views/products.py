@@ -21,10 +21,10 @@ class ProductViewSet(MixedPermissionModelViewSet):
     def get_queryset(self):
         request = self.request
         qs = super().get_queryset()
-        uf = request.query_params.get('estado', None)
+        category = request.query_params.get('category', None)
         
-        if uf:
-            qs = qs.filter(uf=uf)
+        if category:
+            qs = qs.filter(category=category)
 
         return qs
 
