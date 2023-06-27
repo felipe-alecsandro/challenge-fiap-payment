@@ -20,10 +20,7 @@ To build and run the project locally, follow these steps:
 1. Run docker in your local enviroment
 
 2. In your terminal, run the following command:
-    ~sudo docker-compose up -d --build
+    ~sudo docker-compose up --build
 
-3. Enter the web image and run create superuser
-    sudo docker exec -it web /bin/bash
-    python manage.py createsuperuser
 
 
