@@ -143,11 +143,14 @@ class OrderItemsViewSet(MixedPermissionModelViewSet):
     }
 
     def create(self, serializer):
-        order_id = serializer.validated_data['order']
+        serializer = self.get_serializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        order = serializer.validated_data['order']
+        order_id = order.id
         user = self.request.user
-
         if user.is_authenticated:
             try:
+                print(order_id)
                 order = Order.objects.get(id=order_id, user=user)
             except Order.DoesNotExist:
                 return Response({'error': 'Você não tem permissão para editar esse carrinho'}, status=403)
