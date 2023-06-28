@@ -150,7 +150,6 @@ class OrderItemsViewSet(MixedPermissionModelViewSet):
         user = self.request.user
         if user.is_authenticated:
             try:
-                print(order_id)
                 order = Order.objects.get(id=order_id, user=user)
             except Order.DoesNotExist:
                 return Response({'error': 'Você não tem permissão para editar esse carrinho'}, status=403)
