@@ -1,6 +1,6 @@
 from django.contrib import admin
 from order.models.products import Product
-from order.forms import ProductForm, OrderForm, OrderItemsForm
+from order.forms import ProductForm, OrderForm
 from .models.orders import Order, OrderItems
 
 
