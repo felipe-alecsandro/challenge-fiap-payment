@@ -16,7 +16,8 @@ class CheckoutViewset(MixedPermissionModelViewSet):
         'create': [AllowAny],
     }
 
-    def create(self, request, *args, **kwargs):
+    @action(detail=True, methods=['post'], url_path='checkout', permission_classes=[AllowAny])
+    def order_checkout(self, request, pk=None):
         order = self.get_object()
 
         if order.status == 'em aberto':

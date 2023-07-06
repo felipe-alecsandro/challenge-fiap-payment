@@ -9,7 +9,8 @@ class Order(models.Model):
     user = models.ForeignKey(BaseUser, verbose_name='usuario', null=True, blank=True,
                              on_delete=models.CASCADE)
     session_token = models.CharField(max_length=255, blank=True, null=True)
-    cpf = models.ForeignKey(Cpf, verbose_name="cpf", null=True, blank=True, on_delete=models.CASCADE)
+    cpf = models.ForeignKey(Cpf ,verbose_name="cpf", null=True, blank=True,
+                             on_delete=models.CASCADE)
     status = models.CharField(max_length=10,verbose_name="status", choices=(("em aberto", "em aberto"), ("fila", "fila"), ('fazendo','fazendo'), ('disponivel','disponivel'), ('entregue','entregue'), ('cancelado','cancelado')), default='em aberto')
     created_at = models.DateTimeField(auto_now=True, verbose_name="criado em")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="atualizado em", null=True, blank=True,)
@@ -22,12 +23,9 @@ class Order(models.Model):
         return f"{self.id}"
 
  
-    def save(self, *args, **kwargs):
-        if self.cpf is not None:
-            cpf_instance, _ = Cpf.objects.get_or_create(cpf=self.cpf)
-            self.cpf = cpf_instance
-
-        super().save(*args, **kwargs)
+    def save(self,*args,**kwargs):
+        kwargs['using'] = 'default'
+        return super().save(*args,**kwargs)
 
 
 class OrderItems(models.Model):

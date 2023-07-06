@@ -42,6 +42,8 @@ class OrderViewSet(MixedPermissionModelViewSet):
         session_token = session.session_key
         user = user if user.is_authenticated else None
 
+        request.data['cpf'] = str(request.data.get('cpf'))
+
         serializer = OrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save(session_token=session_token, user=user)
@@ -49,14 +51,14 @@ class OrderViewSet(MixedPermissionModelViewSet):
         cart_serializer = OrderInlineItemsSerializer(instance)
         return Response(cart_serializer.data, status=status.HTTP_201_CREATED)
     
-    @action(detail=True, methods=['post'], url_path='checkout')
-    def checkout(self, request, pk=None):
+    @action(detail=True, methods=['post'], url_path='cancel', permission_classes=[AllowAny])
+    def cancel(self, request, pk=None):
         order = self.get_object()
 
         if order.status == 'em aberto':
-            order.status = 'fila'
+            order.status = 'cancelado'
             order.save()
-            return Response({'message': 'Order status updated to "fila".'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Order status updated to "cancelado".'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Esse pedido não pode ser finalizado.'}, status=status.HTTP_400_BAD_REQUEST)
 

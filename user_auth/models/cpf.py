@@ -14,15 +14,23 @@ class Cpf(models.Model):
         return self.cpf
 
  
-    def save(self,*args,**kwargs):
-        self.cpf = self.clean_cpf(self.cof)
-        if self.pk is None: 
+    def save(self, *args, **kwargs):
+        self.cpf = self.clean_cpf(self.cpf)
+        if self.pk is None:
             if Cpf.objects.filter(cpf=self.cpf).exists():
                 raise ValueError(_('CPF já existe'))
-        kwargs['using'] = 'default'
-        return super().save(*args,**kwargs)
+        return super().save(*args, **kwargs)
+
     
+    @classmethod
+    def get_or_create_cpf(cls, cpf):
+        try:
+            return cls.objects.get(cpf=cpf), False
+        except cls.DoesNotExist:
+            return cls.objects.create(cpf=cpf), True
+
+        
     @staticmethod
     def clean_cpf(cpf):
         cpf = re.sub('[^0-9]', '', cpf)
-        return super().save(cpf)
+        return cpf
