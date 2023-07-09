@@ -2,14 +2,15 @@ from django.db import models
 import os
 import re
 
-from user_auth.models import BaseUser
+from user_auth.models import BaseUser, Cpf
 from .products import Product
 
 class Order(models.Model):
     user = models.ForeignKey(BaseUser, verbose_name='usuario', null=True, blank=True,
                              on_delete=models.CASCADE)
     session_token = models.CharField(max_length=255, blank=True, null=True)
-    cpf = models.CharField(max_length=11,verbose_name="cpf", null=True, blank=True,)
+    cpf = models.ForeignKey(Cpf ,verbose_name="cpf", null=True, blank=True,
+                             on_delete=models.CASCADE)
     status = models.CharField(max_length=10,verbose_name="status", choices=(("em aberto", "em aberto"), ("fila", "fila"), ('fazendo','fazendo'), ('disponivel','disponivel'), ('entregue','entregue'), ('cancelado','cancelado')), default='em aberto')
     created_at = models.DateTimeField(auto_now=True, verbose_name="criado em")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="atualizado em", null=True, blank=True,)
@@ -24,7 +25,6 @@ class Order(models.Model):
  
     def save(self,*args,**kwargs):
         kwargs['using'] = 'default'
-        self.cpf = re.sub('[^0-9]', '', self.cpf) if self.cpf else self.cpf
         return super().save(*args,**kwargs)
 
 

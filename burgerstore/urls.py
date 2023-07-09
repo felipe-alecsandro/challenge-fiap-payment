@@ -19,6 +19,7 @@ from django.urls import path, include, re_path
 from rest_framework import routers
 from user_auth.views import UserViewSet, signin
 from order.views import ProductViewSet, OrderViewSet, OrderItemsViewSet
+from payment.views import CheckoutViewset
 
 
 router = routers.DefaultRouter()
@@ -27,6 +28,9 @@ router.register('user', UserViewSet)
 router.register('products', ProductViewSet)
 router.register('order', OrderViewSet, basename='order')
 router.register('items', OrderItemsViewSet)
+router.register('payment', CheckoutViewset)
+
+
 
 
 
