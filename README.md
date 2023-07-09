@@ -11,7 +11,7 @@ A functional backend service for customers and store staff can create and manage
 Before running the project, make sure you have the following installed on your machine:
 
 - Docker (so you can run the project)
-- Postgres (so you can manage local database)
+- Postgres/Dbeaver/PGAdmin (so you can manage local database if needed (optional))
 
 ## Getting Started
 
