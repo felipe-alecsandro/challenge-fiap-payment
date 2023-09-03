@@ -29,8 +29,6 @@ router.register('products', ProductViewSet)
 router.register('order', OrderViewSet, basename='order')
 router.register('items', OrderItemsViewSet)
 router.register('payment', CheckoutViewset)
-router.register('webhooks', TransactionWebhookView)
-
 
 
 
@@ -39,5 +37,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('signin/', signin, name='signin'),
+    path('webhook/', TransactionWebhookView.as_view(), name='webhook'),
 ]
 

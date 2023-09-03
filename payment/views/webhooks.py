@@ -1,25 +1,21 @@
-# views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from payment.serializers.transactions import TransactionSerializer
 from payment.use_cases.webhooks import ProcessWebhookUseCase
 
 class TransactionWebhookView(APIView):
-    serializer_class = TransactionSerializer
-
     def post(self, request):
-        # Parse and validate the incoming webhook payload
-        serializer = self.serializer_class(data=request.data)
+        payload = request.data  # Assuming your webhook payload is sent in the request data
 
-        if serializer.is_valid():
-            # Execute the use case to process the webhook payload
-            webhook_payload = serializer.validated_data
-            use_case = ProcessWebhookUseCase()
-            use_case.execute(webhook_payload)
+        # Create an instance of the ProcessWebhookUseCase
+        use_case = ProcessWebhookUseCase()
 
-            # Respond with a success message
+        # Call the use case to process the webhook payload
+        success = use_case.execute(payload)
+
+        if success:
+            # Respond with a success message and HTTP 200 status code
             return Response({'message': 'Webhook processed successfully'}, status=status.HTTP_200_OK)
         else:
-            # Respond with validation errors
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # Respond with an error message and HTTP 400 status code
+            return Response({'message': 'Webhook processing failed'}, status=status.HTTP_400_BAD_REQUEST)
