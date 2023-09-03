@@ -11,7 +11,7 @@ class Order(models.Model):
     session_token = models.CharField(max_length=255, blank=True, null=True)
     cpf = models.ForeignKey(Cpf ,verbose_name="cpf", null=True, blank=True,
                              on_delete=models.CASCADE)
-    status = models.CharField(max_length=10,verbose_name="status", choices=(("em aberto", "em aberto"), ("fila", "fila"), ('fazendo','fazendo'), ('disponivel','disponivel'), ('entregue','entregue'), ('cancelado','cancelado')), default='em aberto')
+    status = models.CharField(max_length=20,verbose_name="status", choices=(("em aberto", "em aberto"), ("recebido", "recebido"), ('em preparacao','em preparacao'), ('pronto','pronto'), ('finalizado','finalizado'), ('cancelado','cancelado')), default='em aberto')
     created_at = models.DateTimeField(auto_now=True, verbose_name="criado em")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="atualizado em", null=True, blank=True,)
 
