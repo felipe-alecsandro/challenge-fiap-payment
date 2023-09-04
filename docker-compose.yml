@@ -16,7 +16,7 @@ services:
       - project-network
 
   web:
-    build: .
+    image: deboraferrarids2/challenge_web:latest
     container_name: app
     volumes:
       - .:/usr/src/app
