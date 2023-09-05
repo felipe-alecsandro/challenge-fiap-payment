@@ -8,5 +8,5 @@ spec:
   type: LoadBalancer
   ports: 
   - name: goserver-service
-    port: 4050
+    port: 80
     targetPort: 8080

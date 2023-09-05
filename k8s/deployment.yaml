@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: postgres-container
-          image: thiago5gg/postgres-challenge
+          image: postgres
           env:
             - name: POSTGRES_DB
               value: challengedb
@@ -29,9 +29,9 @@ spec:
                   name: postgres-credentials
                   key: password
           ports:
-            - containerPort: 5432
+            - containerPort: 3020
         - name: challenge-container
-          image: thiago5gg/challenge-k
+          image: deboraferrarids2/challenge_web:v2.0
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -43,5 +43,7 @@ spec:
                 secretKeyRef:
                   name: aws-credentials
                   key: secret-key
+            - name: DATABASE_HOST
+              value: db
           ports:
-            - containerPort: 5000
+            - containerPort: 8080

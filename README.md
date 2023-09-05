@@ -20,7 +20,10 @@ To build and run the project locally, follow these steps:
 1. Run docker in your local enviroment
 
 2. In your terminal, run the following command:
-    ~sudo docker-compose up --build
+    ~sudo docker-compose up
+
+## K8S
+There's another README into the K8s file
 
 
 
