@@ -19,7 +19,7 @@ from django.urls import path, include, re_path
 from rest_framework import routers
 from user_auth.views import UserViewSet, signin
 from order.views import ProductViewSet, OrderViewSet, OrderItemsViewSet
-from payment.views import CheckoutViewset
+from payment.views import CheckoutViewset, TransactionWebhookView
 
 
 router = routers.DefaultRouter()
@@ -33,10 +33,10 @@ router.register('payment', CheckoutViewset)
 
 
 
-
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('signin/', signin, name='signin'),
+    path('webhook/', TransactionWebhookView.as_view(), name='webhook'),
 ]
 

@@ -6,13 +6,10 @@ from user_auth.mixed_views import MixedPermissionModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from django.db.models import Case, When, IntegerField
-from django.db.models import F, Case, When
 from django.contrib.sessions.backends.db import SessionStore
-from user_auth.models import BaseUser
-from order.models.products import Product
 from order.models.orders import OrderItems, Order
 from order.serializers.orders import *
+from order.use_cases.orders import ListOrdersUseCase
 
 class OrderViewSet(MixedPermissionModelViewSet):
     queryset = Order.objects.all()
@@ -62,34 +59,10 @@ class OrderViewSet(MixedPermissionModelViewSet):
         else:
             return Response({'message': 'Esse pedido não pode ser finalizado.'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-    def list(self, request, *args, **kwargs):
-        status = request.query_params.get('status', None)
-        user = request.user
-        queryset = self.queryset
-
-        if user.is_authenticated:
-            if not user.is_staff:
-                queryset = queryset.filter(user=user)
-        else:
-            queryset = self.queryset.filter(session_token=request.query_params.get('session'))
         
-        if status:
-            queryset = queryset.filter(status=status)
-
-        queryset = queryset.order_by(
-            Case(
-                When(status='fila', then=0),
-                When(status='aberto', then=1),
-                default=2,
-                output_field=IntegerField(),
-            ),
-            'updated_at'
-        )
-        
-        serializer = OrderInlineItemsSerializer(queryset, many=True)
-        return Response(serializer.data)
-
+    def get_queryset(self):
+        use_case = ListOrdersUseCase()
+        return use_case.execute(self.request)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         user = request.user

@@ -8,6 +8,9 @@ from rest_framework import status
 from django.contrib.sessions.backends.db import SessionStore
 from order.models.orders import Order
 from order.serializers.orders import *
+from payment.use_cases.payment import CheckoutOrderUseCase
+from payment.models.transaction import Transaction
+from payment.serializers.transactions import TransactionSerializer
 
 class CheckoutViewset(MixedPermissionModelViewSet):
     queryset = Order.objects.all()
@@ -19,11 +22,17 @@ class CheckoutViewset(MixedPermissionModelViewSet):
     @action(detail=True, methods=['post'], url_path='checkout', permission_classes=[AllowAny])
     def order_checkout(self, request, pk=None):
         order = self.get_object()
+        use_case = CheckoutOrderUseCase()
 
-        if order.status == 'em aberto':
-            order.status = 'fila'
-            order.save()
-            return Response({'message': 'Order status updated to "fila".'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Esse pedido não pode ser finalizado.'}, status=status.HTTP_400_BAD_REQUEST)
-    
+        try:
+            use_case.execute(order)
+            return Response({'message': 'Order status updated to "recebido".'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'], url_path='status', permission_classes=[AllowAny])
+    def get_transactions_for_order(self, request, pk=None):
+        order = self.get_object()
+        transactions = Transaction.objects.filter(order=order)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
