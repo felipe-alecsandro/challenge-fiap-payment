@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.hashers import make_password
 
+from user_auth.models.cpf import Cpf
+
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         if not email:
@@ -34,6 +36,8 @@ class CustomUserManager(BaseUserManager):
 class BaseUser(AbstractUser):
     email = models.EmailField(_('endereço de e-mail'), unique=True)
     name = models.CharField (max_length=150, null=True, blank=True)
+    cpf = models.OneToOneField(Cpf ,verbose_name="cpf", null=True, blank=True,
+                             on_delete=models.CASCADE)
     password_confirmation = models.CharField(max_length=100, default='')
 
     USERNAME_FIELD = 'email'

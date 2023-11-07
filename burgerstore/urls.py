@@ -37,6 +37,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('signin/', signin, name='signin'),
+    #path('user/<int:pk>/delete/', delete_user, name='delete_user'),
     path('webhook/', TransactionWebhookView.as_view(), name='webhook'),
 ]
 

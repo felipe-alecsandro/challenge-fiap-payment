@@ -25,10 +25,24 @@ from rest_framework_simplejwt.tokens import RefreshToken
 def signin(request):
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
-        user = authenticate(
-            email=serializer.validated_data['email'],
-            password=serializer.validated_data['password']
-        )
+        print(f'entrou is valid')
+        if 'email' in serializer.validated_data:
+            print(f'entrou vaçidated email')
+            user = authenticate(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password']
+            )
+        elif 'cpf' in serializer.validated_data:
+            print(f'entrou cpf')
+            cpf = serializer.validated_data['cpf']
+            baseuser=BaseUser.objects.using('default').get(cpf=cpf)
+            email = baseuser.email
+            print(cpf)
+            print(email)
+            user = authenticate(
+                email=email,
+                password=serializer.validated_data['password']
+            )
         if user:
             refresh = RefreshToken.for_user(user)
 
@@ -70,3 +84,16 @@ class UserViewSet(MixedPermissionModelViewSet):
 
         response_serializer = UserGETSerializer(saved)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+    
+
+# @api_view(['DELETE'])
+# @permission_classes([IsAuthenticated])
+# def delete_user(request, pk):
+#     try:
+#         user_to_delete = BaseUser.objects.get(pk=pk)
+#         user_to_delete.delete()
+#         return Response({'detail': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+#     except User.DoesNotExist:
+#         return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+  
