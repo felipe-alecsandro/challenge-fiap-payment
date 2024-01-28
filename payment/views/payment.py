@@ -19,6 +19,16 @@ class CheckoutViewset(MixedPermissionModelViewSet):
         'create': [AllowAny],
     }
 
+    
+    serializer_class = TransactionSerializer 
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return TransactionSerializer  # Replace YourCreateSerializerClass
+        # Add other conditions for different actions if needed
+        return self.serializer_class
+
+
     @action(detail=True, methods=['post'], url_path='checkout', permission_classes=[AllowAny])
     def order_checkout(self, request, pk=None):
         order = self.get_object()

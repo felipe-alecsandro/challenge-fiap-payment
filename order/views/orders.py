@@ -39,9 +39,11 @@ class OrderViewSet(MixedPermissionModelViewSet):
         session_token = session.session_key
         user = user if user.is_authenticated else None
 
-        request.data['cpf'] = str(request.data.get('cpf'))
-
-        serializer = OrderSerializer(data=request.data)
+        # Create a mutable copy of the request data
+        mutable_data = request.data.copy()
+        mutable_data['cpf'] = str(mutable_data.get('cpf'))
+        
+        serializer = OrderSerializer(data=mutable_data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save(session_token=session_token, user=user)
 
@@ -98,12 +100,12 @@ class OrderItemsViewSet(MixedPermissionModelViewSet):
 
     }
 
-    def create(self, serializer):
-        serializer = self.get_serializer(data=self.request.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.validated_data['order']
         order_id = order.id
-        user = self.request.user
+        user = request.user
         if user.is_authenticated:
             try:
                 order = Order.objects.get(id=order_id, user=user)

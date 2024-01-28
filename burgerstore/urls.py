@@ -24,7 +24,7 @@ from payment.views import CheckoutViewset, TransactionWebhookView
 
 router = routers.DefaultRouter()
 
-router.register('user', UserViewSet)
+router.register('user', UserViewSet, basename='user')
 router.register('products', ProductViewSet)
 router.register('order', OrderViewSet, basename='order')
 router.register('items', OrderItemsViewSet)
@@ -39,5 +39,11 @@ urlpatterns = [
     path('signin/', signin, name='signin'),
     #path('user/<int:pk>/delete/', delete_user, name='delete_user'),
     path('webhook/', TransactionWebhookView.as_view(), name='webhook'),
+    path('user/', UserViewSet.create, name='user'),
+    path('order_create/', OrderViewSet.create, name='order_create'),
+    path('order_retrieve/<int:pk>/', OrderViewSet.retrieve, name='order_retrieve'),
+    path('items_create/', OrderItemsViewSet.create, name='items_create'),
+
+
 ]
 

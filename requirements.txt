@@ -3,3 +3,7 @@ psycopg2-binary
 #sqlparse
 djangorestframework==3.11.1
 djangorestframework-simplejwt
+
+# Testing and coverage
+coverage
+behave==1.2.6

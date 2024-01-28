@@ -11,7 +11,7 @@ def imageFileUpdload(filename, instance):
 class Product(models.Model):
     name = models.CharField(max_length=400, unique=False)
     category = models.CharField(max_length=40,verbose_name="categoria", choices=(("bebida", "bebida"), ("lanche", "lanche"), ('sobremesa','sobremesa'), ('acompanhamento','acompanhamento')))
-    description = models.CharField(max_length=400, unique=True)
+    description = models.CharField(max_length=400, unique=False)
     size = models.CharField(max_length=10,verbose_name="tamanho", choices=(("pequeno", "pequeno"), ("medio", "medio"), ('grande','grande')), blank=True, null=True)
     image = models.FileField(_('imagem'), upload_to=imageFileUpdload, blank=True, null=True)
     amount = models.IntegerField(verbose_name="valor",help_text="em centavos",default=0)
