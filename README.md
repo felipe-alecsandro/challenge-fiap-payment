@@ -4,14 +4,14 @@ This is a Django REST Framework project that runs in Docker.
 
 ## Burgerstore operation
 
-A functional backend service for customers and store staff can create and manage orders 
+A functional backend service for customers and store staff manage pyments 
 
 ## Prerequisites
 
 Before running the project, make sure you have the following installed on your machine:
 
 - Docker (so you can run the project)
-- Postgres/Dbeaver/PGAdmin (so you can manage local database if needed (optional))
+- Mongo
 
 ## Getting Started
 
@@ -21,9 +21,6 @@ To build and run the project locally, follow these steps:
 
 2. In your terminal, run the following command:
     ~sudo docker-compose up
-
-## K8S
-There's another README into the K8s file
 
 
 

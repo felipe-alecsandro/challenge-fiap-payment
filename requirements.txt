@@ -1,9 +1,9 @@
 Django==3.2.13
-psycopg2-binary
-#sqlparse
-djangorestframework==3.11.1
+djongo
+djangorestframework==3.12.4
 djangorestframework-simplejwt
-
-# Testing and coverage
+mongoengine==0.22.1
+django_mongoengine
 coverage
 behave==1.2.6
+mercadopago

@@ -1,35 +1,35 @@
 version: '3.7'
 
 services:
-  db:
-    image: postgres
-    container_name: db
+  mongo-db:
+    image: mongo
+    container_name: mongo-db
     environment:
-      - POSTGRES_DB=challengedb
-      - POSTGRES_USER=fiap
-      - POSTGRES_PASSWORD=fiap
+      - MONGO_INITDB_DATABASE=challengedb
+      - MONGO_INITDB_ROOT_USERNAME=fiap
+      - MONGO_INITDB_ROOT_PASSWORD=fiap
     volumes:
-      - data:/var/lib/postgresql/data
+      - data:/data/db
     ports:
-      - "5432:5432"
+      - "27017:27017"
     networks:
       - project-network
 
-  web:
+  payment-app:
     #build: .
-    image: deboraferrarids2/challenge_web:v2.0
-    container_name: app
+    image: deboraferrarids2/payment:v5.0
+    container_name: payment-app
     volumes:
       - .:/usr/src/app
       - ./logs:/usr/src/app/logs
     ports:
-      - "5000:5000"
+      - "7000:7000"
     depends_on:
-      - db
+      - mongo-db
     networks:
       - project-network
     restart: always
-    command: bash -c "sleep 10 && python manage.py makemigrations && python manage.py migrate && python manage.py create_superuser && python manage.py populate_products && python manage.py runserver 0.0.0.0:5000" 
+    command: bash -c "sleep 10 && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:7000" 
 
 volumes:
   data:

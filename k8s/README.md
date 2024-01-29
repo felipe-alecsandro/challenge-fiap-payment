@@ -9,7 +9,7 @@
  -Executar cada yaml
  $ kubectl apply -f secrets-aws.yaml
 
- $ kubectl apply -f secrets-postgres.yaml
+ $ kubectl apply -f secrets-mongo.yaml
 
  $ kubectl apply -f deployment.yaml
 
