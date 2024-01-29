@@ -17,27 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
-from user_auth.views import UserViewSet, signin
-from order.views import ProductViewSet, OrderViewSet, OrderItemsViewSet
-from payment.views import CheckoutViewset, TransactionWebhookView
-
+from payment.views import create_and_retrieve_transaction, mercado_pago_webhook
 
 router = routers.DefaultRouter()
-
-router.register('user', UserViewSet)
-router.register('products', ProductViewSet)
-router.register('order', OrderViewSet, basename='order')
-router.register('items', OrderItemsViewSet)
-router.register('payment', CheckoutViewset)
-
-
-
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('signin/', signin, name='signin'),
-    #path('user/<int:pk>/delete/', delete_user, name='delete_user'),
-    path('webhook/', TransactionWebhookView.as_view(), name='webhook'),
+    path('transactions/', create_and_retrieve_transaction, name='create_and_retrieve_transaction'),
+    path('webhook/mercado_pago/', mercado_pago_webhook, name='mercado_pago_webhook'),
 ]
+
 

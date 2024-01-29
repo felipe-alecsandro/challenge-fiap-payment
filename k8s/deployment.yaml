@@ -13,25 +13,25 @@ spec:
         app: challenge
     spec:
       containers:
-        - name: postgres-container
-          image: postgres
+        - name: mongo-container
+          image: mongo
           env:
-            - name: POSTGRES_DB
+            - name: MONGO_DB
               value: challengedb
-            - name: POSTGRES_USER
+            - name: mongo_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres-credentials
+                  name: mongo-credentials
                   key: username
-            - name: POSTGRES_PASSWORD
+            - name: mongo_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres-credentials
+                  name: mongo-credentials
                   key: password
           ports:
             - containerPort: 3020
         - name: challenge-container
-          image: deboraferrarids2/challenge_web:v2.0
+          image: deboraferrarids2/payment:v3.0
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -44,6 +44,6 @@ spec:
                   name: aws-credentials
                   key: secret-key
             - name: DATABASE_HOST
-              value: db
+              value: mongo-db
           ports:
             - containerPort: 8080

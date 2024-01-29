@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'user_auth',
-    'order',
     'payment',
 ]
 
@@ -56,8 +54,7 @@ REST_FRAMEWORK = {
     ],
     'EXCEPTION_HANDLER': 'burgerstore.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+    'rest_framework.authentication.TokenAuthentication',
     ],
 }
 
@@ -71,33 +68,33 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+#     'ROTATE_REFRESH_TOKENS': True,
+#     'BLACKLIST_AFTER_ROTATION': True,
+#     'UPDATE_LAST_LOGIN': False,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
+#     'ALGORITHM': 'HS256',
+#     'SIGNING_KEY': SECRET_KEY,
+#     'VERIFYING_KEY': None,
+#     'AUDIENCE': None,
+#     'ISSUER': None,
 
-    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
+#     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
+#     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+#     'USER_ID_FIELD': 'id',
+#     'USER_ID_CLAIM': 'user_id',
 
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     'TOKEN_TYPE_CLAIM': 'token_type',
 
-    'JTI_CLAIM': 'jti',
+#     'JTI_CLAIM': 'jti',
 
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=10),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
-}
+#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=10),
+#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
+# }
 
 ROOT_URLCONF = 'burgerstore.urls'
 
@@ -126,22 +123,28 @@ WSGI_APPLICATION = 'burgerstore.wsgi.application'
 
 import os
 
+# settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,
         'NAME': 'challengedb',
-        'USER': 'fiap',
-        'PASSWORD': 'fiap',
-        'HOST': 'db',
-        'PORT': '5432'
+        'CLIENT': {
+            'host': 'mongodb://mongo-db:27017/',
+            'username': 'fiap',
+            'password': 'fiap',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
     }
 }
 
 
-AUTH_USER_MODEL = 'user_auth.BaseUser'
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
+
+#AUTH_USER_MODEL = 'user_auth.BaseUser'
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
 
 
 
@@ -207,23 +210,23 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-# Set the session engine (default is 'django.contrib.sessions.backends.db')
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# # Set the session engine (default is 'django.contrib.sessions.backends.db')
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# Set the session cookie name (default is 'sessionid')
-SESSION_COOKIE_NAME = 'burgerstore_cookie'
+# # Set the session cookie name (default is 'sessionid')
+# SESSION_COOKIE_NAME = 'burgerstore_cookie'
 
-# Set the session cookie age (default is 2 weeks)
-SESSION_COOKIE_AGE = 3600  # 1 hour
+# # Set the session cookie age (default is 2 weeks)
+# SESSION_COOKIE_AGE = 3600  # 1 hour
 
-# Set the session cookie path (default is '/')
-SESSION_COOKIE_PATH = '/burgerstore/'
+# # Set the session cookie path (default is '/')
+# SESSION_COOKIE_PATH = '/burgerstore/'
 
-# Set the session cookie domain (default is None)
-SESSION_COOKIE_DOMAIN = 'burgerstore.com'
+# # Set the session cookie domain (default is None)
+# SESSION_COOKIE_DOMAIN = 'burgerstore.com'
 
-# Set whether the session cookie should be secure (default is False)
-SESSION_COOKIE_SECURE = True
+# # Set whether the session cookie should be secure (default is False)
+# SESSION_COOKIE_SECURE = True
 
-# Set whether the session cookie should be HTTP-only (default is True)
-SESSION_COOKIE_HTTPONLY = True
+# # Set whether the session cookie should be HTTP-only (default is True)
+# SESSION_COOKIE_HTTPONLY = True
